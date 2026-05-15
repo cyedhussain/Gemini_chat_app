@@ -60,49 +60,135 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Gemini ChatApp'), centerTitle: true),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
+ @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: const Color(0xffF5F7FB),
+
+    appBar: AppBar(
+      elevation: 0,
+      backgroundColor: Colors.white,
+      centerTitle: true,
+      title: const Text(
+        "Gemini AI",
+        style: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
+
+    body: Column(
+      children: [
+
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.only(top: 12, bottom: 12),
+            itemCount: messages.length,
+            itemBuilder: (context, index) {
+              return ItemMessages(msg: messages[index]);
+            },
+          ),
+        ),
+
+        if (loading)
+          Padding(
+            padding: const EdgeInsets.only(left: 20, bottom: 10),
+            child: Row(
               children: [
-                for (var msg in messages) ItemMessages(msg: msg),
-                loading
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Text('waiting'),
-                      )
-                    : SizedBox(),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 14,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.pink.shade300,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 6,
+                        height: 6,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "Typing...",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
 
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: msgController,
-                    decoration: InputDecoration(hintText: 'enter a message'),
+        SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 10,
+                    offset: Offset(0, 4),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    if (msgController.text.isNotEmpty) {
-                      sendMessage();
-                    }
-                  },
-                  icon: Icon(CupertinoIcons.forward, color: Colors.blue),
-                ),
-              ],
+                ],
+              ),
+              child: Row(
+                children: [
+
+                  Expanded(
+                    child: TextField(
+                      controller: msgController,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Ask anything...",
+                      ),
+                    ),
+                  ),
+
+                  GestureDetector(
+                    onTap: () {
+                      if (msgController.text.isNotEmpty) {
+                        sendMessage();
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            Color(0xff4A90E2),
+                            Color(0xff357ABD),
+                          ],
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.send,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+
+                ],
+              ),
             ),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+
+      ],
+    ),
+  );
+}
 }
